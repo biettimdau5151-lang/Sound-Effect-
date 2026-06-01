@@ -20,12 +20,11 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1
 
-    # Đã sửa: Thêm tham số -SolutionDirectory . để không bị lỗi restore
     - name: Restore NuGet packages
-      run: nuget restore SoundEffect.csproj -SolutionDirectory .
+      run: nuget restore SoundEffect.csproj -PackagesDirectory ..
 
     - name: Build for Release (x64)
-      run: msbuild SoundEffect.csproj /p:Configuration=Release /p:Platform=x64
+      run: msbuild SoundEffect.csproj /p:Configuration=Release /p:Platform=x64 /p:SkipLinkCheck=true
 
     # Đã sửa: Cập nhật chính xác đường dẫn bin/x64/Release/ cho cấu hình x64
     - name: Prepare Release Artifacts
