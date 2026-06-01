@@ -1,0 +1,15 @@
+<UserControl x:Class="SoundEffect.Lib.Controls.TextBlockEdit"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <TextBlock x:Name="PART_TextBlock"
+                   Text="{Binding Text, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                   Visibility="Visible"
+                   MouseDown="TextBlock_MouseDown" />
+        <TextBox x:Name="PART_TextBox"
+                 Text="{Binding Text, RelativeSource={RelativeSource AncestorType=UserControl}, UpdateSourceTrigger=PropertyChanged}"
+                 Visibility="Collapsed"
+                 LostFocus="TextBox_LostFocus"
+                 KeyDown="TextBox_KeyDown" />
+    </Grid>
+</UserControl>
