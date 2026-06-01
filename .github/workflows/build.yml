@@ -6,6 +6,9 @@ on:
       - 'v*' # Chạy tự động khi bạn tạo tag dạng v1.0, v2.0...
   workflow_dispatch: # Cho phép bạn kích hoạt thủ công từ CMD bằng gh CLI
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
