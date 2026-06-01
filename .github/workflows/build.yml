@@ -3,8 +3,8 @@ name: Build and Release
 on:
   push:
     tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-  workflow_dispatch: # Allows manual trigger
+      - 'v*' # Chạy tự động khi bạn tạo tag dạng v1.0, v2.0...
+  workflow_dispatch: # Cho phép bạn kích hoạt thủ công từ CMD bằng gh CLI
 
 jobs:
   build:
@@ -20,17 +20,24 @@ jobs:
     - name: Setup NuGet
       uses: NuGet/setup-nuget@v1
 
+    # Đã sửa: Thêm tham số -SolutionDirectory . để không bị lỗi restore
     - name: Restore NuGet packages
-      run: nuget restore SoundEffect.csproj
+      run: nuget restore SoundEffect.csproj -SolutionDirectory .
 
     - name: Build for Release (x64)
       run: msbuild SoundEffect.csproj /p:Configuration=Release /p:Platform=x64
 
+    # Đã sửa: Cập nhật chính xác đường dẫn bin/x64/Release/ cho cấu hình x64
     - name: Prepare Release Artifacts
       shell: pwsh
       run: |
+        if (Test-Path release-artifacts) { Remove-Item release-artifacts -Recurse -Force }
         mkdir release-artifacts
-        cp bin/Release/* release-artifacts/ -Recurse
+        if (Test-Path bin/x64/Release) {
+            cp bin/x64/Release/* release-artifacts/ -Recurse -ErrorAction SilentlyContinue
+        } else {
+            cp bin/Release/* release-artifacts/ -Recurse -ErrorAction SilentlyContinue
+        }
         Compress-Archive -Path release-artifacts/* -DestinationPath SoundEffect-Release.zip
 
     - name: Create Release and Upload Asset
